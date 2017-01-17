@@ -1,3 +1,4 @@
+import { KiiService } from './../../services/kii/kii.service';
 import { AppConfig } from './../../app.config';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,23 +13,28 @@ export class LoginComponent implements OnInit {
   password: string;
   user: KiiUser;
 
+  credential: {
+    username: string,
+    password: string
+  };
+
   constructor(
-    private router: Router
+    private router: Router,
+    private kiiService: KiiService
   ) { }
 
   ngOnInit() {
-
+    this.credential = {
+      username: '',
+      password: ''
+    };
   }
 
   login() {
-    KiiUser.authenticate(this.username, this.password).then((theUser: KiiUser) => {
-      localStorage.setItem(AppConfig.STORAGE_TOKEN_KEY, theUser.getAccessToken());
-      this.router.navigate(['todo']);
-    }).catch(error => {
-      var theUser = error.target;
-      var errorString = error.message;
-      console.log('fail:' + errorString);
-    });
+    this.kiiService.authenticate(this.credential).subscribe(loggedIn => {
+      if (loggedIn)
+        this.router.navigate(['todo']);
+    })
   }
 
 }
