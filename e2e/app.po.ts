@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class AngularTodoSamplpPage {
+export class AngularTodosamplePage {
   navigateTo() {
     return browser.get('/');
   }
