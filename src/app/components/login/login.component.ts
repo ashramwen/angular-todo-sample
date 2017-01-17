@@ -1,4 +1,6 @@
+import { AppConfig } from './../../app.config';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -6,19 +8,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  username: string;
+  password: string;
   user: KiiUser;
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    Kii.initializeWithSite('d6fb3474', '16ed23f5d46ec414d824907053a145d5', KiiSite.JP);
 
-    var username = 'aaaa';
-    var password = 'bbbb';
+  }
 
-    KiiUser.authenticate(username, password).then((theUser: KiiUser) => {
-      console.log(theUser);
-      this.user = theUser;
+  login() {
+    KiiUser.authenticate(this.username, this.password).then((theUser: KiiUser) => {
+      localStorage.setItem(AppConfig.STORAGE_TOKEN_KEY, theUser.getAccessToken());
+      this.router.navigate(['todo']);
     }).catch(error => {
       var theUser = error.target;
       var errorString = error.message;

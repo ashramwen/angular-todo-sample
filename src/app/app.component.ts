@@ -1,3 +1,4 @@
+import { KiiService } from './services/kii/kii.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'Angular-Todo-sample';
+  constructor(kiiService: KiiService) { }
 }
