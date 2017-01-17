@@ -1,5 +1,5 @@
 {
-  "name": "angular-todo-sample",
+  "name": "push-sample",
   "version": "0.0.0",
   "license": "MIT",
   "angular-cli": {},
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@angular/compiler-cli": "^2.3.1",
     "@types/jasmine": "2.5.38",
-    "@types/kii-cloud-sdk": "^2.4.32",
     "@types/node": "^6.0.42",
     "angular-cli": "1.0.0-beta.25.5",
     "codelyzer": "~2.0.0-beta.1",
@@ -40,7 +39,6 @@
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-remap-istanbul": "^0.2.1",
-    "kii-cloud-sdk": "^2.4.9",
     "protractor": "~4.0.13",
     "ts-node": "1.2.1",
     "tslint": "^4.3.0",

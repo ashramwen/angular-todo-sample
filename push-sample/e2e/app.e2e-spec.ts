@@ -1,10 +1,10 @@
-import { AngularTodosamplePage } from './app.po';
+import { PushSamplePage } from './app.po';
 
-describe('angular-todo-sample App', function() {
-  let page: AngularTodosamplePage;
+describe('push-sample App', function() {
+  let page: PushSamplePage;
 
   beforeEach(() => {
-    page = new AngularTodosamplePage();
+    page = new PushSamplePage();
   });
 
   it('should display message saying app works', () => {
