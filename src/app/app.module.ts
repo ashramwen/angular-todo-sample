@@ -1,31 +1,30 @@
-import { AuthGuardService } from './services/auth-guard/auth-guard.service';
-import { KiiService } from './services/kii/kii.service';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
-import { AppRoutingModule } from './app-routing.module';
-import 'hammerjs';
-
-import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { TodoDetailComponent } from './components/todo-detail/todo-detail.component';
+import { NgModule, ErrorHandler } from '@angular/core';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { MyApp } from './app.component';
+import { AboutPage } from '../pages/about/about';
+import { ContactPage } from '../pages/contact/contact';
+import { HomePage } from '../pages/home/home';
+import { TabsPage } from '../pages/tabs/tabs';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    TodoDetailComponent
+    MyApp,
+    AboutPage,
+    ContactPage,
+    HomePage,
+    TabsPage
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    AppRoutingModule,
-    MaterialModule.forRoot()
+    IonicModule.forRoot(MyApp)
   ],
-  providers: [AuthGuardService, KiiService],
-  bootstrap: [AppComponent]
+  bootstrap: [IonicApp],
+  entryComponents: [
+    MyApp,
+    AboutPage,
+    ContactPage,
+    HomePage,
+    TabsPage
+  ],
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })
-export class AppModule { }
+export class AppModule {}
