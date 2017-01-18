@@ -42,9 +42,9 @@ export class TodoPage {
 
   delete(todoItem: TodoItem, index: number) {
     if (!todoItem.done) return;
-    // this.kiiService.deleteTodoItem(todoItem).subscribe(() => {
-    //   this.todoItems.splice(index, 1);
-    // });
+    this.kiiService.deleteTodoItem(todoItem).subscribe(() => {
+      this.todoItems.splice(index, 1);
+    });
   }
 
 }

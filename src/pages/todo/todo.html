@@ -6,14 +6,14 @@
 -->
 <ion-header>
   <ion-navbar>
-    <ion-title>todo</ion-title>
+    <ion-title>Todo</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
   <ion-list>
     <ion-item *ngFor="let item of todoItems; let i=index">
-      <ion-label>{{item.text}}</ion-label>
-      <ion-checkbox [(ngModel)]="item.done" (change)="delete(item, i)"></ion-checkbox>
+      <ion-label><span [class.delete]="item.done">{{item.text}}</span></ion-label>
+      <ion-checkbox [(ngModel)]="item.done" (ionChange)="delete(item, i)"></ion-checkbox>
     </ion-item>
   </ion-list>
   <ion-row>
