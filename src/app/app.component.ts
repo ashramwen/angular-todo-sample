@@ -20,52 +20,52 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
 
 
-    alert('ready');
-    kii = window['kii'].create();
-    kii.Kii.initializeWithSite("58d9081d", "2932582ebd12d1ce69fca7f3d77adb09", kii.KiiSite.JP);
+      alert('ready');
+      kii = window['kii'].create();
+      kii.Kii.initializeWithSite("58d9081d", "2932582ebd12d1ce69fca7f3d77adb09", kii.KiiSite.JP);
 
-    alert('initAndroid start');
-    window['kiiPush'].initAndroid("603734069394", "pushReceived", {             // pushReceived should be correct name(with namespace)
-      user: {
-        ledColor: "#FFFF00FF",
-        notificatonText: "user"
-      },
-      app: {
-        ledColor: "#FFFF00FF",
-        notificatonText: "app"
-      },
-      direct: {
-        showInNotificationArea: true,
-        ledColor: "#FFFFFFFF",
-        notificatonTitle: "$.title",
-        notificatonText: "$.msg"
-      },
-      success: function () {
-        alert('init done');       // never called(bug of Kii push plug-in?)
-      },
-      failure: function (msg) {   // never called(bug of Kii push plug-in?)
-        alert('init error:' + msg);
-      }
-    });
-    alert('initAndroid end');
+      alert('initAndroid start');
+      window['kiiPush'].initAndroid("603734069394", "pushReceived", {             // pushReceived should be correct name(with namespace)
+        user: {
+          ledColor: "#FFFF00FF",
+          notificatonText: "user"
+        },
+        app: {
+          ledColor: "#FFFF00FF",
+          notificatonText: "app"
+        },
+        direct: {
+          showInNotificationArea: true,
+          ledColor: "#FFFFFFFF",
+          notificatonTitle: "$.title",
+          notificatonText: "$.msg"
+        },
+        success: function () {
+          alert('init done');       // never called(bug of Kii push plug-in?)
+        },
+        failure: function (msg) {   // never called(bug of Kii push plug-in?)
+          alert('init error:' + msg);
+        }
+      });
+      alert('initAndroid end');
 
-    kii.KiiUser.authenticate("aaaa", "bbbb", {
-      success: function (theUser) {
-        alert("user authenticated");
-        window['kiiPush'].register(kii, {
-          received: "pushReceived",             // pushReceived should be correct name(with namespace)
-          success: function (token) {
-            alert('token=' + token);
-          },
-          failure: function (msg) {
-            alert('error ' + msg);
-          }
-        });
-      },
-      failure: function (theUser, errorString) {
-        alert("Error authenticating: " + errorString);
-      }
-    });
+      kii.KiiUser.authenticate("aaaa", "bbbb", {
+        success: function (theUser) {
+          alert("user authenticated");
+          window['kiiPush'].register(kii, {
+            received: "pushReceived",             // pushReceived should be correct name(with namespace)
+            success: function (token) {
+              alert('token=' + token);
+            },
+            failure: function (msg) {
+              alert('error ' + msg);
+            }
+          });
+        },
+        failure: function (theUser, errorString) {
+          alert("Error authenticating: " + errorString);
+        }
+      });
 
 
       StatusBar.styleDefault();
