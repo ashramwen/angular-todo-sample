@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
+import { Push } from '@ionic/cloud-angular';
 
 import { TabsPage } from '../pages/tabs/tabs';
-
-var kii;
+declare function require(string): any;
+var kii = require('kii-cloud-sdk').create();
 
 @Component({
   templateUrl: 'app.html'
@@ -20,53 +21,49 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
 
 
-    alert('ready');
-    kii = window['kii'].create();
-    kii.Kii.initializeWithSite("58d9081d", "2932582ebd12d1ce69fca7f3d77adb09", kii.KiiSite.JP);
+      console.log("ready");
+      // kii = window['kii'].create();  // Kii push plug-in
+      kii.Kii.initializeWithSite("58d9081d", "2932582ebd12d1ce69fca7f3d77adb09", kii.KiiSite.JP);
 
-    alert('initAndroid start');
-    window['kiiPush'].initAndroid("603734069394", "pushReceived", {             // pushReceived should be correct name(with namespace)
-      user: {
-        ledColor: "#FFFF00FF",
-        notificatonText: "user"
-      },
-      app: {
-        ledColor: "#FFFF00FF",
-        notificatonText: "app"
-      },
-      direct: {
-        showInNotificationArea: true,
-        ledColor: "#FFFFFFFF",
-        notificatonTitle: "$.title",
-        notificatonText: "$.msg"
-      },
-      success: function () {
-        alert('init done');       // never called(bug of Kii push plug-in?)
-      },
-      failure: function (msg) {   // never called(bug of Kii push plug-in?)
-        alert('init error:' + msg);
-      }
-    });
-    alert('initAndroid end');
+      console.log("Push.init");
+      let push = Push.init({
+        android: {
+          senderID: "603734069394"
+        },
+        ios: {
+          alert: "true",
+          badge: false,
+          sound: "true"
+        },
+        windows: {}
+      });
 
-    kii.KiiUser.authenticate("aaaa", "bbbb", {
-      success: function (theUser) {
-        alert("user authenticated");
-        window['kiiPush'].register(kii, {
-          received: "pushReceived",             // pushReceived should be correct name(with namespace)
-          success: function (token) {
-            alert('token=' + token);
+      console.log("push.on(registration)");
+      push.on('registration', (data) => {
+        console.log("registered");
+        kii.KiiUser.authenticate("aaaa", "bbbb", {
+          success: function (theUser) {
+            console.log("user authenticated");
+            kii.KiiUser.getCurrentUser().pushInstallation().installGcm(data.registrationId, false, {
+              success: function () {
+                console.log("push installed");
+              },
+              failure: function () {
+                console.log("push installation failed");
+              }
+           });
           },
-          failure: function (msg) {
-            alert('error ' + msg);
+          failure: function (theUser, errorString) {
+            console.log("Error authenticating: " + errorString);
           }
         });
-      },
-      failure: function (theUser, errorString) {
-        alert("Error authenticating: " + errorString);
-      }
-    });
-
+      });
+      push.on('notification', (data) => {
+        console.log(data.message);
+      });
+      push.on('error', (e) => {
+        console.log(e.message);
+      });
 
       StatusBar.styleDefault();
       Splashscreen.hide();
@@ -74,6 +71,3 @@ export class MyApp {
   }
 }
 
- function pushReceived(args) {
-    alert('push received:'+JSON.stringify(args));
- }
