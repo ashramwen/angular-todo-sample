@@ -2,6 +2,8 @@ import { TodoItem, TodoItems } from './../module/TodoItem';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
+import { Push } from 'ionic-native';
+import { Platform } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 
 /*
@@ -13,12 +15,85 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class KiiService {
 
-  constructor(public http: Http) {
+  constructor(public http: Http,
+              public platform: Platform) {
 
   }
 
   user: KiiUser;
   bucket: KiiBucket;
+  isInitialized: boolean = false;
+
+  initialize(senderId: string, callback: (data: any) => void) {
+    if (this.isInitialized) {
+      return
+    }
+
+    // get user and create bucket.
+    this.user = KiiUser.getCurrentUser();
+    this.bucket = this.user.bucketWithName('Todo');
+
+    if (!this.platform.is('cordova')) {
+      return;
+    }
+
+    // subscribe bucket.
+    this.user.pushSubscription().isSubscribed(
+      this.bucket,
+      {
+        success: function(subscription, bucket, isSubscribed) {
+          if (!isSubscribed) {
+            KiiUser.getCurrentUser().pushSubscription().subscribe(
+              bucket,
+              {
+                success: function(subscription, bucket) {
+                  // nothing to do.
+                },
+
+                failure: function(error) {
+                  console.log("fail to subscribe");
+                }
+              });
+          }
+        },
+        failure: function(error) {
+          console.log("fail to check subscription");
+        }
+      });
+
+    // register push
+    var push = Push.init({
+      android: {
+        senderID: senderId
+      },
+      ios: {
+        alert: "true",
+        badge: true,
+        sound: 'false'
+      },
+      windows: {}
+    });
+    push.on('registration', (data) => {
+      KiiUser.getCurrentUser().pushInstallation().installGcm(data.registrationId, false, {
+        success: function () {
+          console.log("push installed");
+        },
+        failure: function () {
+          console.log("push installation failed");
+        }
+      });
+    });
+
+    push.on('notification', (data) => {
+      callback(data);
+    });
+
+    push.on('error', (e) => {
+      // nothing to do.
+    });
+
+    this.isInitialized = true;
+  }
 
   addTodoItem(item: TodoItem) {
     let obj = this.bucket.createObject();
@@ -56,11 +131,6 @@ export class KiiService {
       });
       return items;
     });
-  }
-
-  setBucket() {
-    this.user = KiiUser.getCurrentUser();
-    this.bucket = this.user.bucketWithName('Todo');
   }
 
 }
