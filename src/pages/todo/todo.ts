@@ -37,9 +37,9 @@ export class TodoPage {
   }
 
   ionViewDidLoad() {
-    var my = this
+
     this.kiiService.initialize('603734069394', (data) => {
-      my.refresh()
+      alert("Something changed.")
     });
     this.fetchItems()
   }
