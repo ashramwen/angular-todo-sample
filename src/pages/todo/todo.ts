@@ -24,11 +24,15 @@ export class TodoPage {
   text: string;
   todoItems: TodoItems;
 
-  ionViewDidLoad() {
+  private fetchItems() {
     this.kiiService.setBucket();
     this.kiiService.getTodoItems().subscribe((items: TodoItems) => {
       this.todoItems = items;
     });
+  }
+
+  ionViewDidLoad() {
+    this.fetchItems()
   }
 
   onEnter(text: string) {
@@ -45,6 +49,10 @@ export class TodoPage {
     this.kiiService.deleteTodoItem(todoItem).subscribe(() => {
       this.todoItems.splice(index, 1);
     });
+  }
+
+  relead() {
+    this.fetchItems()
   }
 
 }
